@@ -49,10 +49,14 @@
 
   <p id="status">Click Start Test to load the face-detection model.</p>
 
-  <div id="cameraBox">
-    <video id="camera" autoplay muted playsinline></video>
-    <canvas id="overlay"></canvas>
-  </div>
+  <div id="cameraBox"
+     style="display:block; width:100%; max-width:640px; margin:20px auto;">
+  <video id="camera"
+         autoplay muted playsinline
+         style="display:block; width:100%; min-height:300px; background:#222;">
+  </video>
+  <canvas id="overlay"></canvas>
+</div>
 
   <br>
   <button id="start">Start Test</button>
