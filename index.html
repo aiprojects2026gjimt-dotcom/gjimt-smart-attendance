@@ -1,0 +1,676 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    :root {
+      --red: #A91F2C;
+      --orange: #F28C28;
+      --white: #FFFFFF;
+      --light-red: #FFF2F2;
+      --light-orange: #FFF5E9;
+      --text: #7D1822;
+      --border: #F2D0B0;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--white);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .top-bar {
+      padding: 18px 5%;
+      border-bottom: 5px solid var(--red);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+    }
+
+    .logo {
+      width: 58px;
+      height: 58px;
+      border: 2px solid var(--red);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: var(--red);
+      font-size: 20px;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .brand h1 {
+      margin: 0;
+      color: var(--red);
+      font-size: 23px;
+    }
+
+    .brand p {
+      margin: 5px 0 0;
+      color: var(--orange);
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .system-label {
+      color: var(--red);
+      font-size: 13px;
+      font-weight: bold;
+      text-align: right;
+    }
+
+    main {
+      max-width: 1050px;
+      width: 92%;
+      margin: 30px auto;
+    }
+
+    .welcome {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .welcome h2 {
+      margin: 0 0 9px;
+      color: var(--red);
+      font-size: 30px;
+    }
+
+    .welcome p {
+      margin: 0;
+      color: #B45B22;
+      line-height: 1.6;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 0.85fr 1.5fr;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(169,31,44,0.09);
+    }
+
+    .noor-panel {
+      background: var(--light-orange);
+      padding: 30px 22px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .noor-picture {
+      width: 165px;
+      height: 165px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 5px solid var(--orange);
+      background: var(--white);
+    }
+
+    .noor-panel h3 {
+      margin: 17px 0 8px;
+      color: var(--red);
+      font-size: 24px;
+    }
+
+    .noor-panel p {
+      margin: 0;
+      line-height: 1.6;
+      color: #9C541E;
+    }
+
+    .noor-tag {
+      margin-top: 18px;
+      padding: 8px 14px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      color: var(--red);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .options-panel {
+      padding: 28px;
+    }
+
+    .options-panel h3 {
+      margin: 0 0 8px;
+      color: var(--red);
+      font-size: 23px;
+    }
+
+    .intro {
+      color: #9C541E;
+      margin: 0 0 22px;
+      line-height: 1.5;
+    }
+
+    .option-card {
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 17px;
+      margin-bottom: 14px;
+      background: var(--white);
+    }
+
+    .option-heading {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 9px;
+    }
+
+    .number {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: var(--light-red);
+      color: var(--red);
+      display: grid;
+      place-items: center;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .option-card h4 {
+      margin: 0;
+      color: var(--red);
+      font-size: 17px;
+    }
+
+    .option-card p {
+      font-size: 13px;
+      color: #87533A;
+      line-height: 1.5;
+      margin: 0 0 13px;
+    }
+
+    button {
+      border: none;
+      border-radius: 9px;
+      padding: 13px 15px;
+      width: 100%;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      background: var(--red);
+      color: var(--white);
+    }
+
+    button:hover { filter: brightness(0.94); }
+
+    button:disabled {
+      opacity: 0.65;
+      cursor: wait;
+    }
+
+    .orange-button {
+      background: var(--orange);
+      color: var(--white);
+    }
+
+    .outline-button {
+      background: var(--white);
+      color: var(--red);
+      border: 2px solid var(--red);
+    }
+
+    input {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #E8B98E;
+      border-radius: 9px;
+      margin: 5px 0 12px;
+      font-size: 16px;
+      color: var(--text);
+    }
+
+    input:focus {
+      outline: 2px solid #F5D4D5;
+      border-color: var(--red);
+    }
+
+    .hidden { display: none !important; }
+
+    #message {
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 9px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+      white-space: pre-line;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .success {
+      color: #176B3A;
+      background: #EAF8EF;
+    }
+
+    .error {
+      color: var(--red);
+      background: var(--light-red);
+    }
+
+    .info {
+      color: #8A4B16;
+      background: var(--light-orange);
+    }
+
+    footer {
+      margin-top: 28px;
+      padding: 20px 12px;
+      text-align: center;
+      color: var(--red);
+      background: var(--light-red);
+      border-top: 3px solid var(--orange);
+    }
+
+    footer strong {
+      color: var(--orange);
+      letter-spacing: 1px;
+    }
+
+    /* Popup window */
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      padding: 20px;
+      background: rgba(80, 20, 20, 0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 470px;
+      background: var(--white);
+      border-radius: 18px;
+      padding: 25px;
+      text-align: center;
+      border-top: 5px solid var(--red);
+      box-shadow: 0 12px 35px rgba(0,0,0,0.16);
+    }
+
+    .modal-card h3 {
+      color: var(--red);
+      margin: 8px 0 12px;
+    }
+
+    .modal-card p {
+      color: #87533A;
+      line-height: 1.6;
+    }
+
+    .camera-frame {
+      width: 100%;
+      background: var(--light-orange);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 15px 0;
+      min-height: 180px;
+    }
+
+    #cameraVideo {
+      display: block;
+      width: 100%;
+      max-height: 300px;
+      object-fit: cover;
+      transform: scaleX(-1);
+    }
+
+    @media (max-width: 720px) {
+      .top-bar {
+        flex-direction: column;
+      }
+
+      .brand {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .system-label { text-align: center; }
+
+      .layout { grid-template-columns: 1fr; }
+
+      .noor-picture {
+        width: 135px;
+        height: 135px;
+      }
+
+      .options-panel { padding: 20px; }
+
+      .welcome h2 { font-size: 26px; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="top-bar">
+    <div class="brand">
+      <div class="logo">GJ</div>
+      <div>
+        <h1>GJIMT</h1>
+        <p>Gian Jyoti Institute of Management &amp; Technology</p>
+      </div>
+    </div>
+    <div class="system-label">SMART AI ATTENDANCE SYSTEM</div>
+  </header>
+
+  <main>
+    <section class="welcome">
+      <h2>Welcome to GJIMT!</h2>
+      <p>Smart attendance, a simple and convenient experience.</p>
+    </section>
+
+    <section class="layout">
+      <aside class="noor-panel">
+        <!-- Replace this placeholder URL with your NOOR image when available -->
+        <img
+          class="noor-picture"
+          src="https://placehold.co/400x400/FFF5E9/A91F2C?text=NOOR"
+          alt="NOOR virtual assistant"
+          onerror="this.style.display='none';"
+        >
+        <h3>Hello, I'm NOOR!</h3>
+        <p>Your GJIMT virtual assistant.<br>
+          Choose an option to continue with attendance.</p>
+        <div class="noor-tag">YOUR ATTENDANCE ASSISTANT</div>
+      </aside>
+
+      <section class="options-panel">
+        <h3>Mark Your Attendance</h3>
+        <p class="intro">Please choose one of the following options.</p>
+
+        <!-- OPTION 1 -->
+        <div class="option-card">
+          <div class="option-heading">
+            <div class="number">01</div>
+            <h4>Face Recognition</h4>
+          </div>
+          <p>Look towards the webcam to begin face verification.</p>
+          <button type="button" onclick="startFaceRecognition()">
+            Start Face Recognition
+          </button>
+        </div>
+
+        <!-- OPTION 2 -->
+        <div class="option-card">
+          <div class="option-heading">
+            <div class="number">02</div>
+            <h4>Enter Employee ID</h4>
+          </div>
+          <p>Use your Employee ID as an alternative check-in method.</p>
+
+          <label for="employeeId">Employee ID</label>
+          <input
+            type="text"
+            id="employeeId"
+            placeholder="Enter your Employee ID"
+            autocomplete="off"
+            onkeydown="if(event.key === 'Enter') checkEmployee();"
+          >
+
+          <button id="continueButton" type="button" onclick="checkEmployee()">
+            Verify Employee ID
+          </button>
+        </div>
+
+        <!-- OPTION 3 -->
+        <div class="option-card">
+          <div class="option-heading">
+            <div class="number">03</div>
+            <h4>Don't Know Your Employee ID?</h4>
+          </div>
+          <p>Contact the GJIMT administration team to retrieve your ID securely.</p>
+          <button
+            type="button"
+            class="orange-button"
+            onclick="showForgotId()"
+          >
+            Forgot Employee ID?
+          </button>
+        </div>
+
+        <div id="message" class="hidden" role="status" aria-live="polite"></div>
+      </section>
+    </section>
+  </main>
+
+  <footer>
+    <strong>Aspire. Achieve. Ascend.</strong>
+    <p>Gian Jyoti Institute of Management &amp; Technology</p>
+  </footer>
+
+  <!-- Camera popup -->
+  <div id="cameraModal" class="modal hidden" role="dialog"
+       aria-modal="true" aria-labelledby="cameraTitle">
+    <div class="modal-card">
+      <h3 id="cameraTitle">Face Recognition</h3>
+      <p id="cameraMessage">
+        Allow camera access to start the webcam preview.
+      </p>
+
+      <div id="cameraFrame" class="camera-frame hidden">
+        <video id="cameraVideo" autoplay playsinline muted></video>
+      </div>
+
+      <button id="cameraButton" type="button" onclick="openCamera()">
+        Enable Camera
+      </button>
+
+      <button
+        type="button"
+        class="outline-button"
+        style="margin-top:10px"
+        onclick="closeCamera()"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+
+  <!-- General alert popup -->
+  <div id="alertModal" class="modal hidden" role="alertdialog"
+       aria-modal="true" aria-labelledby="alertTitle">
+    <div class="modal-card">
+      <h3 id="alertTitle">Notice</h3>
+      <p id="alertMessage"></p>
+      <button type="button" onclick="closeAlert()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let cameraStream = null;
+
+    function displayMessage(text, type) {
+      const message = document.getElementById("message");
+      message.textContent = text;
+      message.className = type;
+    }
+
+    function showAlert(title, text) {
+      document.getElementById("alertTitle").textContent = title;
+      document.getElementById("alertMessage").textContent = text;
+      document.getElementById("alertModal").classList.remove("hidden");
+    }
+
+    function closeAlert() {
+      document.getElementById("alertModal").classList.add("hidden");
+    }
+
+    function showForgotId() {
+      showAlert(
+        "Employee ID Assistance",
+        "Please contact the GJIMT administration team to retrieve your Employee ID. For your security, the system will not reveal an ID based only on an unverified phone number or email address."
+      );
+    }
+
+    // Stage 1: Test webcam access and show a live preview.
+    // Actual face detection and identity matching are not connected yet.
+    
+async function startFaceRecognition() {
+  const modal = document.getElementById("cameraModal");
+  const video = document.getElementById("cameraVideo");
+
+  // Open the camera window first
+  modal.classList.remove("hidden");
+
+  try {
+    if (!navigator.mediaDevices ||
+        !navigator.mediaDevices.getUserMedia) {
+      throw new Error(
+        "Camera access is not supported in this browser context."
+      );
+    }
+
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: false
+    });
+
+    video.srcObject = stream;
+    await video.play();
+
+  } catch (error) {
+    console.error("Camera error:", error);
+
+    alert(
+      "Unable to open the camera.\n\n" +
+      "Error: " + error.message +
+      "\n\nPlease allow camera access or use Option 2."
+    );
+  }
+}
+
+
+    async function openCamera() {
+      const cameraMessage = document.getElementById("cameraMessage");
+      const cameraButton = document.getElementById("cameraButton");
+
+      cameraButton.disabled = true;
+      cameraButton.textContent = "Opening Camera...";
+
+      try {
+        if (cameraStream) {
+          cameraStream.getTracks().forEach(track => track.stop());
+          cameraStream = null;
+        }
+
+        // Prefer the external webcam when the browser can select it.
+        cameraStream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+            facingMode: "user"
+          },
+          audio: false
+        });
+
+        const video = document.getElementById("cameraVideo");
+        video.srcObject = cameraStream;
+
+        await video.play();
+
+        document.getElementById("cameraFrame").classList.remove("hidden");
+        cameraMessage.textContent =
+          "Camera connected. Live preview is working. Actual face recognition is not connected yet, so attendance has not been marked.";
+
+        cameraButton.textContent = "Camera Ready";
+        cameraButton.disabled = true;
+
+      } catch (error) {
+        cameraButton.disabled = false;
+        cameraButton.textContent = "Try Camera Again";
+
+        cameraMessage.textContent =
+          "The webcam could not be opened. Check the USB connection and browser camera permission.";
+
+        showAlert(
+          "Unable to Detect Your Face",
+          "Unable to access the webcam. Kindly use Option 2, Enter Employee ID."
+        );
+      }
+    }
+
+    function closeCamera() {
+      if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+        cameraStream = null;
+      }
+
+      document.getElementById("cameraVideo").srcObject = null;
+      document.getElementById("cameraModal").classList.add("hidden");
+    }
+
+    // Existing Google Sheets attendance backend is retained.
+    function checkEmployee() {
+      const employeeId = document.getElementById("employeeId").value.trim();
+      const button = document.getElementById("continueButton");
+
+      if (!employeeId) {
+        displayMessage("Please enter your Employee ID.", "error");
+        return;
+      }
+
+      button.disabled = true;
+      button.textContent = "Processing...";
+
+      displayMessage(
+        "Verifying employee and recording attendance...",
+        "info"
+      );
+
+      google.script.run
+        .withSuccessHandler(function(result) {
+          button.disabled = false;
+          button.textContent = "Verify Employee ID";
+
+          if (result && result.success) {
+            displayMessage(result.message, "success");
+          } else {
+            displayMessage(
+              result && result.message
+                ? result.message
+                : "Unable to verify employee. Please try again.",
+              "error"
+            );
+          }
+        })
+        .withFailureHandler(function(error) {
+          button.disabled = false;
+          button.textContent = "Verify Employee ID";
+
+          displayMessage(
+            "Unable to process your request. Please try again.",
+            "error"
+          );
+          console.error(error);
+        })
+        .markEmployeeAttendance(employeeId);
+    }
+  </script>
+</body>
+</html>
