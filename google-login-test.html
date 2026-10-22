@@ -27,25 +27,35 @@
 
   <p id="status">Please sign in with the authorized receptionist account.</p>
 
-  <script>
-    function handleCredentialResponse(response) {
-      const status = document.getElementById("status");
+ 
+<script>
+  function handleCredentialResponse(response) {
+    const status = document.getElementById("status");
 
-      try {
-        const parts = response.credential.split(".");
-        const payload = JSON.parse(
-          atob(parts[1].replace(/-/g, "+").replace(/_/g, "/"))
-        );
+    try {
+      const idToken = response.credential;
 
-        status.textContent =
-          "Google sign-in successful. Signed-in account: " +
-          (payload.email || "Email unavailable") +
-          ". This is a sign-in test only; attendance has not been recorded.";
-      } catch (error) {
-        status.textContent =
-          "A credential was received, but its details could not be displayed.";
+      if (!idToken) {
+        status.textContent = "No Google ID token was received.";
+        return;
       }
+
+      const parts = idToken.split(".");
+      const payload = JSON.parse(
+        atob(parts[1].replace(/-/g, "+").replace(/_/g, "/"))
+      );
+
+      status.textContent =
+        "Google sign-in successful. Signed-in account: " +
+        (payload.email || "Email unavailable") +
+        ". ID token received (" + idToken.length +
+        " characters). Token not displayed. Attendance has not been recorded.";
+    } catch (error) {
+      status.textContent =
+        "A credential was received, but its details could not be read.";
     }
-  </script>
+  }
+</script>
+
 </body>
 </html>
