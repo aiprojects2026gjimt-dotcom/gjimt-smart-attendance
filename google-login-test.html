@@ -1,0 +1,51 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GJIMT Google Sign-in Test</title>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+  <h2>GJIMT Smart AI Attendance</h2>
+  <p>Receptionist Google sign-in test</p>
+
+  <div id="g_id_onload"
+       data-client_id="262368848060-jatsm0taogl9lmbc8mggnf02m2c8dfrp.apps.googleusercontent.com"
+       data-callback="handleCredentialResponse"
+       data-auto_prompt="false">
+  </div>
+
+  <div class="g_id_signin"
+       data-type="standard"
+       data-size="large"
+       data-theme="outline"
+       data-text="signin_with"
+       data-shape="rectangular">
+  </div>
+
+  <p id="status">Please sign in with the authorized receptionist account.</p>
+
+  <script>
+    function handleCredentialResponse(response) {
+      const status = document.getElementById("status");
+
+      try {
+        const parts = response.credential.split(".");
+        const payload = JSON.parse(
+          atob(parts[1].replace(/-/g, "+").replace(/_/g, "/"))
+        );
+
+        status.textContent =
+          "Google sign-in successful. Signed-in account: " +
+          (payload.email || "Email unavailable") +
+          ". This is a sign-in test only; attendance has not been recorded.";
+      } catch (error) {
+        status.textContent =
+          "A credential was received, but its details could not be displayed.";
+      }
+    }
+  </script>
+</body>
+</html>
