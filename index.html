@@ -326,7 +326,7 @@ function checkEmployee() {
   }
 
   function onMessage(event) {
-    if (event.origin !== "https://script.google.com") return;
+    if (!event.origin.endsWith("-script.googleusercontent.com")) return;
     if (event.source !== bridge.contentWindow) return;
 
     const data = event.data;
