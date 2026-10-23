@@ -295,47 +295,92 @@
       browser code. To make Employee ID attendance work from GitHub Pages, connect
       this page to a secured server-side endpoint before enabling public use.
     */
-    function checkEmployee() {
-      const employeeId = document.getElementById("employeeId").value.trim();
-      const button = document.getElementById("continueButton");
+    
+function checkEmployee() {
+  const employeeId =
+    document.getElementById("employeeId").value.trim();
+  const button = document.getElementById("continueButton");
+  const bridge = document.getElementById("attendanceBridge");
+  const requestId = "verify-" + Date.now();
 
-      if (!employeeId) {
-        displayMessage("Please enter your Employee ID.", "error");
-        return;
-      }
+  if (!employeeId) {
+    displayMessage("Please enter your Employee ID.", "error");
+    return;
+  }
 
-      if (typeof google === "undefined" || !google.script || !google.script.run) {
-        displayMessage(
-          "The interface is running on GitHub Pages, but the Google Apps Script attendance connection is not available on this page yet. No attendance has been recorded. A secure backend connection is required.",
-          "error"
-        );
-        return;
-      }
+  if (!bridge || !bridge.contentWindow) {
+    displayMessage("Backend bridge is unavailable.", "error");
+    return;
+  }
 
-      button.disabled = true;
-      button.textContent = "Processing…";
-      displayMessage("Verifying employee and recording attendance…", "info");
+  button.disabled = true;
+  button.textContent = "Verifying...";
+  displayMessage("Connecting to employee verification...", "info");
 
-      google.script.run
-        .withSuccessHandler(function(result) {
-          button.disabled = false;
-          button.textContent = "Verify Employee ID";
-          if (result && result.success) {
-            displayMessage(result.message || "Attendance recorded successfully.", "success");
-          } else {
-            displayMessage(result && result.message ? result.message : "Unable to verify employee. Please try again.", "error");
-          }
-        })
-        .withFailureHandler(function(error) {
-          button.disabled = false;
-          button.textContent = "Verify Employee ID";
-          displayMessage("Unable to process your request. Please try again.", "error");
-          console.error(error);
-        })
-        .markEmployeeAttendance(employeeId);
+  let finished = false;
+
+  function cleanup() {
+    window.removeEventListener("message", onMessage);
+    button.disabled = false;
+    button.textContent = "Verify Employee ID";
+  }
+
+  function onMessage(event) {
+    if (event.origin !== "https://script.google.com") return;
+    if (event.source !== bridge.contentWindow) return;
+
+    const data = event.data;
+    if (!data || data.type !== "GJIMT_ATTENDANCE_RESPONSE") return;
+    if (data.requestId !== requestId) return;
+
+    finished = true;
+    clearTimeout(timeout);
+    cleanup();
+
+    const result = data.result || data;
+
+    if (result.success) {
+      displayMessage(
+        result.message || "Employee verified successfully. No attendance was recorded.",
+        "success"
+      );
+    } else {
+      displayMessage(
+        result.message || "Employee verification failed.",
+        "error"
+      );
     }
+  }
+
+  window.addEventListener("message", onMessage);
+
+  const timeout = setTimeout(function() {
+    if (finished) return;
+    cleanup();
+    displayMessage(
+      "No response from the backend. Check deployment access and browser console.",
+      "error"
+    );
+  }, 20000);
+
+  bridge.contentWindow.postMessage({
+    type: "GJIMT_ATTENDANCE_REQUEST",
+    action: "VERIFY_EMPLOYEE",
+    requestId: requestId,
+    employeeId: employeeId
+  }, "https://script.google.com");
+}
+
 
     window.addEventListener("pagehide", stopCamera);
   </script>
+  
+<iframe
+  id="attendanceBridge"
+  src="https://script.google.com/macros/s/AKfycbxVITGkYy0Sh4VfB3IdBnPHXTOEUO6CRL1cP3h0dGUUUYy62oQGmNgG7KJJCBMZ4maaDQ/exec?bridge=1"
+  title="Attendance backend connection"
+  style="display:none"
+></iframe>
+
 </body>
 </html>
