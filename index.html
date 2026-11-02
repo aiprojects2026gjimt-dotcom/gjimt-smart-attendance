@@ -200,6 +200,40 @@
 const MODEL_URL =
   "https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@master/weights";
 
+async function loadFaceRecognitionModels() {
+  const MODEL_URL =
+    "https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@master/weights";
+
+  try {
+    document.getElementById("faceMessage").textContent =
+      "Loading face recognition models...";
+
+    await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL);
+
+    await faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL);
+
+    document.getElementById("faceMessage").textContent =
+      "Face recognition models loaded successfully!";
+
+    document.getElementById("faceMessage").className = "success";
+
+    console.log("Face Landmark 68 model loaded.");
+    console.log("Face Recognition model loaded.");
+
+    return true;
+
+  } catch (error) {
+    console.error("Face recognition model error:", error);
+
+    document.getElementById("faceMessage").textContent =
+      "Unable to load face recognition models.";
+
+    document.getElementById("faceMessage").className = "error";
+
+    return false;
+  }
+}
+
 async function loadFaceDetectionModel() {
   try {
     document.getElementById("faceMessage").textContent =
