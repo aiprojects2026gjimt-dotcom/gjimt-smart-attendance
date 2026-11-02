@@ -196,6 +196,38 @@
 
   <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.js"></script>
   <script>  
+    
+const MODEL_URL =
+  "https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@master/weights";
+
+async function loadFaceDetectionModel() {
+  try {
+    document.getElementById("faceMessage").textContent =
+      "Loading face detection model...";
+
+    await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
+
+    document.getElementById("faceMessage").textContent =
+      "Face detection model loaded successfully!";
+
+    document.getElementById("faceMessage").className = "success";
+
+    console.log("GJIMT face detection model loaded successfully.");
+
+    return true;
+
+  } catch (error) {
+    console.error("Face model loading error:", error);
+
+    document.getElementById("faceMessage").textContent =
+      "Unable to load face detection model. Check the browser console.";
+
+    document.getElementById("faceMessage").className = "error";
+
+    return false;
+  }
+}
+
   let cameraStream = null;
 
     function updateClock() {
