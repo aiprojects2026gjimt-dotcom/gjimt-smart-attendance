@@ -296,20 +296,13 @@
       this page to a secured server-side endpoint before enabling public use.
     */
     
+
 function checkEmployee() {
-  const employeeId =
-    document.getElementById("employeeId").value.trim();
+  const employeeId = document.getElementById("employeeId").value.trim();
   const button = document.getElementById("continueButton");
-  const bridge = document.getElementById("attendanceBridge");
-  const requestId = "verify-" + Date.now();
 
   if (!employeeId) {
     displayMessage("Please enter your Employee ID.", "error");
-    return;
-  }
-
-  if (!bridge || !bridge.contentWindow) {
-    displayMessage("Backend bridge is unavailable.", "error");
     return;
   }
 
@@ -317,58 +310,55 @@ function checkEmployee() {
   button.textContent = "Verifying...";
   displayMessage("Connecting to employee verification...", "info");
 
-  let finished = false;
+  const callbackName = "gjimtCallback_" + Date.now();
 
-  function cleanup() {
-    window.removeEventListener("message", onMessage);
+  const script = document.createElement("script");
+
+  window[callbackName] = function(result) {
+    delete window[callbackName];
+    script.remove();
+
     button.disabled = false;
     button.textContent = "Verify Employee ID";
-  }
 
-  function onMessage(event) {
-    if (!event.origin.endsWith("-script.googleusercontent.com")) return;
-    if (event.source !== bridge.contentWindow) return;
-
-    const data = event.data;
-    if (!data || data.type !== "GJIMT_ATTENDANCE_RESPONSE") return;
-    if (data.requestId !== requestId) return;
-
-    finished = true;
-    clearTimeout(timeout);
-    cleanup();
-
-    const result = data.result || data;
-
-    if (result.success) {
+    if (result && result.success) {
       displayMessage(
-        result.message || "Employee verified successfully. No attendance was recorded.",
+        result.message || "Employee verified successfully.",
         "success"
       );
     } else {
       displayMessage(
-        result.message || "Employee verification failed.",
+        result && result.message
+          ? result.message
+          : "Employee verification failed.",
         "error"
       );
     }
-  }
+  };
 
-  window.addEventListener("message", onMessage);
+  script.onerror = function() {
+    delete window[callbackName];
+    script.remove();
 
-  const timeout = setTimeout(function() {
-    if (finished) return;
-    cleanup();
+    button.disabled = false;
+    button.textContent = "Verify Employee ID";
+
     displayMessage(
-      "No response from the backend. Check deployment access and browser console.",
+      "Unable to connect to Apps Script. Please check the deployment URL.",
       "error"
     );
-  }, 20000);
+  };
 
-  bridge.contentWindow.postMessage({
-    type: "GJIMT_ATTENDANCE_REQUEST",
-    action: "VERIFY_EMPLOYEE",
-    requestId: requestId,
-    employeeId: employeeId
-  }, "*");
+  const backendUrl =
+    "https://script.google.com/macros/s/AKfycbxVITGkYy0Sh4VfB3IdBnPHXTOEUO6CRL1cP3h0dGUUUYy62oQGmNgG7KJJCBMZ4maaDQ/exec";
+
+  script.src =
+    backendUrl +
+    "?action=testVerifyEmployee" +
+    "&callback=" + encodeURIComponent(callbackName) +
+    "&_=" + Date.now();
+
+  document.body.appendChild(script);
 }
 
 
